@@ -9,6 +9,8 @@ RUN go test
 # Build app
 RUN go build -o sample-app
 
+RUN go mod init
+
 FROM alpine
 
 COPY --from=builder /code/sample-app /sample-app
