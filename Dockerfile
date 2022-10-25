@@ -4,7 +4,7 @@ COPY . /code
 WORKDIR /code
 
 
-RUN go mod init
+RUN go mod init /code
 
 # Run unit tests
 RUN go test
