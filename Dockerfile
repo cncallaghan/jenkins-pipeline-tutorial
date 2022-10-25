@@ -3,13 +3,14 @@ FROM golang:alpine as builder
 COPY . /code
 WORKDIR /code
 
+
+RUN go mod init
+
 # Run unit tests
 RUN go test
 
 # Build app
 RUN go build -o sample-app
-
-RUN go mod init
 
 FROM alpine
 
