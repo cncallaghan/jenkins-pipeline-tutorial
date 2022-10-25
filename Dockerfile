@@ -3,9 +3,6 @@ FROM golang:alpine as builder
 COPY . /code
 WORKDIR /code
 
-
-RUN go mod init
-
 # Run unit tests
 RUN go test
 
