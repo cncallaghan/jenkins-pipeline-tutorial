@@ -1,15 +1,3 @@
-FROM golang:alpine as builder
+FROM nginx
 
-COPY . /code
-WORKDIR /code
-
-# Run unit tests
-RUN go test
-
-# Build app
-RUN go build -o sample-app
-
-FROM alpine
-
-COPY --from=builder /code/sample-app /sample-app
-CMD /sample-app
+COPY index.html /usr/share/nginx/html
