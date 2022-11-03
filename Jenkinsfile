@@ -31,6 +31,8 @@ pipeline {
         sh "docker push ${docker_repo_uri}:${commit_id}"
         // Clean up
         sh "docker rmi -f ${docker_repo_uri}:${commit_id}"
+        // Update Fargate
+        // sh "aws ecs update-service --cluster arn:aws:ecs:us-east-1:894427396428:cluster/cnc-cluster1 --service cnc-service(NEED TO CREATE THIS) --task-definition arn:aws:ecs:us-east-1:894427396428:task-definition/cnc-cluster1-task:latest --region us-east-1"
     }
 }
     }
