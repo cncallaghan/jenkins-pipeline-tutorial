@@ -31,18 +31,21 @@ pipeline {
         sh "docker push ${docker_repo_uri}:${commit_id}"
         // Clean up
         sh "docker rmi -f ${docker_repo_uri}:${commit_id}"
+        // THIS IS A STUPID TEST, I HOPE THIS ISN't HOW IT WILL WORK
+        sh "latest_image=\$(aws ecr describe-images --output json --repository-name cnc-sample-app --region us-east-1 --query 'sort_by(imageDetails,& imagePushedAt)[-1].imageTags[0]' | sed 's/\"//g'); revision_number=\$(aws ecs register-task-definition --family cnc-task-definition2 --task-role-arn arn:aws:iam::894427396428:role/cnc-ecs-role2 --execution-role-arn arn:aws:iam::894427396428:role/cnc-ecs-role2 --network-mode awsvpc --requires-compatibilities FARGATE --cpu 256 --memory 512 --region us-east-1 --container-definitions  \"[{\\\"name\\\":\\\"cnc-container1\\\",\\\"image\\\":\\\"894427396428.dkr.ecr.us-east-1.amazonaws.com/cnc-sample-app:\$latest_image\\\",\\\"cpu\\\":0,\\\"essential\\\":true,\\\"portMappings\\\":[{\\\"protocol\\\":\\\"tcp\\\",\\\"containerPort\\\":80,\\\"hostPort\\\":80}]}]\" | grep revision | awk '{print \$2}'); aws ecs update-service --cluster arn:aws:ecs:us-east-1:894427396428:cluster/cnc-cluster2 --service cnc-service6 --task-definition arn:aws:ecs:us-east-1:894427396428:task-definition/cnc-task-definition2:\$revision_number --region us-east-1"
+        
         // sleep for 10s (NEED TO REPLACE THIS WITH CONDITIONAL WAIT)
         // sh "sleep 10"
         // GET call for the most recent ECR image tag, save it as a variable called $latest_image
-        sh "latest_image=\$(aws ecr describe-images --output json --repository-name cnc-sample-app --region us-east-1 --query 'sort_by(imageDetails,& imagePushedAt)[-1].imageTags[0]' | sed 's/\"//g')"
+        // sh "latest_image=\$(aws ecr describe-images --output json --repository-name cnc-sample-app --region us-east-1 --query 'sort_by(imageDetails,& imagePushedAt)[-1].imageTags[0]' | sed 's/\"//g')"
         // create new task-definition revision with updated ECR image tag, store revision number as $revision_number
         // sh "sleep 10"
         // same call but without backslashes: aws ecs register-task-definition --family cnc-task-definition-cli-test --task-role-arn arn:aws:iam::894427396428:role/cnc-ecs-role2 --execution-role-arn arn:aws:iam::894427396428:role/cnc-ecs-role2 --network-mode awsvpc --requires-compatibilities FARGATE --cpu 256 --memory 512 --region us-east-1 --container-definitions  "[{\"name\":\"cnc-container-cli-test\",\"image\":\"894427396428.dkr.ecr.us-east-1.amazonaws.com/cnc-sample-app:$latest_image\",\"cpu\":0,\"essential\":true,\"portMappings\":[{\"protocol\":\"tcp\",\"containerPort\":80,\"hostPort\":80}]}]"
-        sh "revision_number=\$(aws ecs register-task-definition --family cnc-task-definition2 --task-role-arn arn:aws:iam::894427396428:role/cnc-ecs-role2 --execution-role-arn arn:aws:iam::894427396428:role/cnc-ecs-role2 --network-mode awsvpc --requires-compatibilities FARGATE --cpu 256 --memory 512 --region us-east-1 --container-definitions  \"[{\\\"name\\\":\\\"cnc-container1\\\",\\\"image\\\":\\\"894427396428.dkr.ecr.us-east-1.amazonaws.com/cnc-sample-app:\$latest_image\\\",\\\"cpu\\\":0,\\\"essential\\\":true,\\\"portMappings\\\":[{\\\"protocol\\\":\\\"tcp\\\",\\\"containerPort\\\":80,\\\"hostPort\\\":80}]}]\" | grep revision | awk '{print \$2}')"
+        // sh "revision_number=\$(aws ecs register-task-definition --family cnc-task-definition2 --task-role-arn arn:aws:iam::894427396428:role/cnc-ecs-role2 --execution-role-arn arn:aws:iam::894427396428:role/cnc-ecs-role2 --network-mode awsvpc --requires-compatibilities FARGATE --cpu 256 --memory 512 --region us-east-1 --container-definitions  \"[{\\\"name\\\":\\\"cnc-container1\\\",\\\"image\\\":\\\"894427396428.dkr.ecr.us-east-1.amazonaws.com/cnc-sample-app:\$latest_image\\\",\\\"cpu\\\":0,\\\"essential\\\":true,\\\"portMappings\\\":[{\\\"protocol\\\":\\\"tcp\\\",\\\"containerPort\\\":80,\\\"hostPort\\\":80}]}]\" | grep revision | awk '{print \$2}')"
         // sleep another 10 seconds (NEED TO REPLACE THIS WITH CONDITIONAL WAIT)
         // sh "sleep 10"
         // update the cluster's service to use the new task definition
-        sh "aws ecs update-service --cluster arn:aws:ecs:us-east-1:894427396428:cluster/cnc-cluster2 --service cnc-service6 --task-definition arn:aws:ecs:us-east-1:894427396428:task-definition/cnc-task-definition2:\$revision_number --region us-east-1"
+        // sh "aws ecs update-service --cluster arn:aws:ecs:us-east-1:894427396428:cluster/cnc-cluster2 --service cnc-service6 --task-definition arn:aws:ecs:us-east-1:894427396428:task-definition/cnc-task-definition2:\$revision_number --region us-east-1"
     }
 }
     }
